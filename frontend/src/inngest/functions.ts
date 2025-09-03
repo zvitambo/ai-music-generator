@@ -12,7 +12,7 @@ export const generateSong = inngest.createFunction(
     onFailure: async ({ event, error }) => {
       await db.song.update({
         where: {
-          id: event?.data?.event?.data?.songId,
+          id: (event?.data?.event?.data as { songId: string }).songId,
         },
         data: {
           status: "failed",
@@ -85,7 +85,7 @@ export const generateSong = inngest.createFunction(
         }
         // Custom mode: Lyrics + prompt
         else if (song.lyrics && song.prompt) {
-          endpoint = env.GENERATE_FROM_DESCRIBED_LYRICS;
+          endpoint = env.GENERATE_WITH_LYRICS;
           body = {
             lyrics: song.lyrics,
             prompt: song.prompt,
@@ -154,7 +154,8 @@ export const generateSong = inngest.createFunction(
           },
         });
 
-        if (responseData && responseData.categories.length > 0) {
+        if (responseData && responseData?.categories?.length > 0) {
+       // if (responseData && responseData.categories.length > 0) {
           await db.song.update({
             where: {
               id: songId,
