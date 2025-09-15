@@ -1,5 +1,6 @@
 8:23:00
 
+npx inngest-cli@latest dev
 
 
 

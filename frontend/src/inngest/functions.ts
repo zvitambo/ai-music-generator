@@ -155,7 +155,6 @@ export const generateSong = inngest.createFunction(
         });
 
         if (responseData && responseData?.categories?.length > 0) {
-       // if (responseData && responseData.categories.length > 0) {
           await db.song.update({
             where: {
               id: songId,
@@ -174,13 +173,12 @@ export const generateSong = inngest.createFunction(
         }
       });
 
+
       return await step.run("deduct-credits", async () => {
-        if (response.ok) return;
+        if (!response.ok) return;
 
         return await db.user.update({
-          where: {
-            id: userId,
-          },
+          where: { id: userId },
           data: {
             credits: {
               decrement: 1,
